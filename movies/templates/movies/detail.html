@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - Detalles</title>
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+
+        body {
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 28%), #07080a;
+            color: #f8f9fa;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .page-header, .detail-header {
+            background: linear-gradient(180deg, #1a273d 0%, #0b1017 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .hero-panel {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .detail-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1.25rem;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+            position: relative;
+        }
+
+        .detail-card img {
+            object-fit: cover;
+            width: 100%;
+            max-height: 500px;
+            filter: blur(4px);
+            transform: scale(1.03);
+        }
+
+        .detail-body {
+            position: relative;
+            margin-top: -130px;
+            background: rgba(0, 0, 0, 0.80);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom-left-radius: 1.25rem;
+            border-bottom-right-radius: 1.25rem;
+        }
+
+        .detail-body p,
+        .detail-body small,
+        .detail-body li {
+            color: rgba(248, 248, 249, 0.88);
+        }
+
+        .detail-body .card-title {
+            color: #ffffff;
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .detail-body .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem;
+        }
+
+        .detail-body .info-list li {
+            padding: 0.45rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .detail-body .info-list li span {
+            color: #9ca3af;
+        }
+
+        .detail-body hr {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-black border-bottom border-secondary py-2 mb-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'movies:index' %}">Catálogo de Películas</a>
+            <div class="d-none d-md-flex align-items-center text-white-50">
+                Catálogo oscuro · Estrenos · Clásicos
+            </div>
+        </div>
+    </nav>
+
+    <header class="detail-header text-white py-4 mb-4">
+        <div class="container hero-panel text-center">
+            <span class="hero-badge">FICHA DE PELÍCULA</span>
+            <h1 class="display-5 fw-bold">{{ movie.title }}</h1>
+            <p class="text-white-50 mb-0">Detalles extendidos y sinopsis exclusiva.</p>
+        </div>
+    </header>
+
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="card detail-card shadow-lg overflow-hidden">
+                    {% if movie.image %}
+                        <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.title }}">
+                    {% endif %}
+                    <div class="card-body detail-body p-4">
+                        <h2 class="card-title">{{ movie.title }}</h2>
+                        <ul class="info-list">
+                            <li><span>Director:</span> {{ movie.director }}</li>
+                            <li><span>Año:</span> {{ movie.year }}</li>
+                            <li><span>Género:</span> {{ movie.genre }}</li>
+                        </ul>
+                        <h5 class="text-white-75">Sinopsis</h5>
+                        <p>{{ movie.synopsis }}</p>
+                        <div class="d-flex flex-column flex-sm-row gap-3 mt-3">
+                            <a href="{% url 'movies:index' %}" class="btn btn-outline-light btn-lg">Volver al catálogo</a>
+                            <a href="{% url 'movies:no_piratees' %}" class="btn btn-danger btn-lg">Ver película</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

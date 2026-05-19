@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Películas</title>
+    <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+
+        body {
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 28%), #07080a;
+            color: #f8f9fa;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(180deg, #1a273d 0%, #0b1017 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .hero-panel {
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #cbd5e1;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            letter-spacing: 0.08em;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.75rem, 5vw, 4.75rem);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            line-height: 1.02;
+        }
+
+        .hero-text {
+            color: #d1d5db;
+            font-size: 1.05rem;
+            max-width: 720px;
+            margin: 1rem auto 0;
+            line-height: 1.8;
+        }
+
+        .movie-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            min-height: 100%;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 1.2rem;
+            min-width: 0;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.38);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .movie-card .card-body {
+            color: #e9ecef;
+            padding: 1.5rem;
+        }
+
+        .movie-card .card-title {
+            color: #f8f9fa;
+            font-size: 1.15rem;
+            letter-spacing: 0.03em;
+        }
+
+        .movie-card .card-text {
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .movie-card .card-img-top,
+        .movie-img-placeholder {
+            height: 220px;
+            object-fit: cover;
+            background-color: #242629;
+            color: #f8f9fa;
+        }
+
+        .movie-card .card-body {
+            min-height: 170px;
+        }
+
+        .movie-card .stretched-link {
+            z-index: 1;
+        }
+
+        .page-title {
+            letter-spacing: 0.04em;
+        }
+
+        @media (min-width: 1200px) {
+            .movie-card {
+                max-height: 520px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-black border-bottom border-secondary py-2 mb-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'movies:index' %}">Catálogo de Películas</a>
+            <div class="d-none d-md-flex align-items-center text-white-50">
+                Catálogo · Estrenos · Clásicos
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header text-white py-5 mb-4">
+        <div class="container hero-panel text-center">
+            <span class="hero-badge">CATÁLOGO · FILMES</span>
+            <h1 class="hero-title">Catálogo de Películas</h1>
+            <p class="hero-text">Explora una colección de estrenos, clásicos y exclusivas películas organizadas para que encuentres tu próxima sesión cinematográfica con estilo.</p>
+        </div>
+    </header>
+
+    <main class="container py-5">
+        {% if movies %}
+            <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 gx-3 gy-4 justify-content-center">
+                {% for movie in movies %}
+                    <div class="col">
+                        <a href="{% url 'movies:detail' movie.pk %}" class="text-decoration-none text-reset d-block">
+                            <div class="card h-100 shadow-sm movie-card">
+                                {% if movie.image %}
+                                    <img src="{{ movie.image.url }}" class="card-img-top" alt="{{ movie.title }}">
+                                {% else %}
+                                    <div class="card-img-top movie-img-placeholder d-flex align-items-center justify-content-center">
+                                        Sin imagen disponible
+                                    </div>
+                                {% endif %}
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">{{ movie.title }}</h5>
+                                    <p class="card-text mb-2 text-white-50"><strong>Director:</strong> {{ movie.director }}</p>
+                                    <p class="card-text mb-3 text-white-50">Año: {{ movie.year }}</p>
+                                    <div class="mt-auto">
+                                        <span class="badge bg-light text-dark">Ver detalles</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-secondary text-center" role="alert">
+                No hay películas disponibles en este momento.
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>
